@@ -2,7 +2,7 @@
 
 **Do not use if you have Photosensitive epilepsy**
 
-### See live on **[Codepen](https://codepen.io/heinhein/pen/LqdEyP)** 
+### See live on **[Codepen](https://codepen.io/heinhein/full/LqdEyP)** 
 
 Dedicated gpu recommended for best experience.
 
