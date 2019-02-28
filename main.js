@@ -1,3 +1,5 @@
+// This code is absolute trash and not meant to be reused.. Good luck
+
 var audio, audioCtx, src, analyser, canvas, ctx, dataArray, bufferLength, barWidth, barHeight;
 var running = true;
 
@@ -7,23 +9,18 @@ var file = document.getElementById("thefile");
 canvas = document.getElementById('visualizer');
 ctx = canvas.getContext("2d");
 
+
 function resizeEventHandler() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     console.log("resizing ", canvas.width, " x ", canvas.height)
 }
 
+
 $(document).ready(resizeEventHandler);
 
 $(window).resize(resizeEventHandler);
-document.addEventListener('load', resizeEventHandler());
 
-// window.addEventListener('resize', resizeEventHandler());
-
-
-function ini() {
-
-}
 
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||
@@ -39,6 +36,7 @@ window.requestAnimFrame = (function () {
         };
 })();
 
+
 //change audio volume
 document.getElementById('volumeControl')
     .addEventListener('change', updateAudioVolume, false);
@@ -52,12 +50,14 @@ function updateAudioVolume() {
     audio.volume = newValue;
 }
 
-//Get cursor position
+
+//Store cursor position
 var clientPos = {
     x: undefined,
     y: undefined
 }
 
+//Get cursor position
 window.addEventListener('mousemove',
     function (event) {
         clientPos.x = event.x;
@@ -68,8 +68,6 @@ window.addEventListener('mousemove',
 
 
 
-
-////
 file.onchange = function () {
     var files = this.files;
     audio.src = URL.createObjectURL(files[0]);
@@ -108,11 +106,6 @@ var lastFps = [];
 var x = 0;
 //console.log(x);
 
-//shockwave vars
-var shockwave = 1;
-var lastCursorSize;
-var deltaCursor;
-var alpha = 255;
 
 function averageFps(fpsArray) {
     var sum = 0;
@@ -125,9 +118,17 @@ function averageFps(fpsArray) {
     return Math.round(sum / fpsArray.length)
 
 }
+
+//shockwave vars
+var shockwave = 1;
+var lastCursorSize;
+var deltaCursor;
+var alpha = 255;
+//other vars
 var h; //hue
 var lastOverallLoudness; //loudness -100ms
 var deltaLoudness;
+
 function animate() {
 
     if (!lastRun) {
@@ -270,50 +271,6 @@ function animate() {
         }
 
 
-        //(clientPos.y - canvas.height / 2 > 0)
-        // if (Math.abs(clientPos.x - x) <= 50) {
-        //     var delta = clientPos.x - x;
-        //     var ratio = 1;
-
-        //     if (clientPos.y - canvas.height / 2 > 0) {
-
-        //         //
-        //         var value = clientPos.y - canvas.height / 2
-
-        //         var range = (canvas.height - 0);
-        //         var newRange = (2 - 1);
-        //         ratio = (((value - 0) * newRange) / range) + 1;
-
-        //         //ratio *= epicRange;
-        //     }
-        //     else {
-        //         ratio = 1;
-        //     }
-
-        //     var value = -Math.abs(clientPos.x - x);
-        //     //console.log(value);
-        //     if (value == 0) {
-        //         ratio = 1;
-        //     } else {
-        //         var range = (50 - 0);
-        //         var newRange = (1.88 - 1);
-        //         var epiic = (((value - 0) * newRange) / range) + 1.88;
-        //         ratio *= epiic;
-        //     }
-
-
-
-
-
-
-        //     ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-        //     ctx.fillRect(x, canvas.height - (barHeight * ratio), barWidth, barHeight * ratio);
-        // } else {
-        //     ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-        //     ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-        // }
-
-
         x += barWidth + 1;
         //console.log(x);
     }
@@ -359,7 +316,7 @@ var frequency = {
     high: 0,
     cursor: 0
 }
-//SETUP BACKGROUND Oh I mean cursor 
+//SETUP cursor
 var cursor = new Image();
 cursor.src = document.getElementById("cursorImg").src;
 
@@ -377,6 +334,7 @@ function overallLoudess(array) {
     cursorFreq(array);
     return frequency.overall = sum / array.length
 }
+
 
 function cursorFreq(array) {
     var sum = 0;
@@ -457,7 +415,7 @@ var backgroundFilter = {
     bottomOpacity : 0
 }
 
-
+//Animate all the css elements needed
 function updateBackground() {
 
     backgroundFilter.scale = 1 + frequency.low / 1777;
@@ -506,6 +464,7 @@ function updateBackground() {
 
 }
 
+//idle detect to hide controls
 var lastMouseSum;
 var startIdle;
 var idle;

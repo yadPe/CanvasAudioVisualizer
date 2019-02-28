@@ -1,3 +1,5 @@
+//WIP
+
 class Particule {
     constructor(x, y, dx, dy, size, speed) {
         this.x = x;
