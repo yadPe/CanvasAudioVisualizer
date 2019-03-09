@@ -10,6 +10,35 @@ canvas = document.getElementById('visualizer');
 ctx = canvas.getContext("2d");
 
 
+var frequency = {
+    overall: 0,
+    low: 0,
+    mid: 0,
+    high: 0,
+    cursor: 0
+}
+
+//SETUP cursor
+var cursor = new Image();
+cursor.src = document.getElementById("cursorImg").src;
+
+
+//Store cursor position
+var clientPos = {
+    x: undefined,
+    y: undefined
+}
+
+//Get cursor position
+window.addEventListener('mousemove',
+    function (event) {
+        clientPos.x = event.x;
+        clientPos.y = event.y;
+
+        //console.log(clientPos);
+    }, false);
+
+
 function resizeEventHandler() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -51,22 +80,38 @@ function updateAudioVolume() {
 }
 
 
-//Store cursor position
-var clientPos = {
-    x: undefined,
-    y: undefined
+
+//idle detect to hide controls
+var lastMouseSum;
+var startIdle;
+var idle;
+function mouseIdle(mouse) {
+    if (!lastMouseSum) {
+        lastMouseSum = mouse.x + mouse.y;
+    }
+    var sum = mouse.x + mouse.y;
+    if (sum == lastMouseSum) {
+        if (!idle) {
+            startIdle = performance.now();
+            idle = true;
+        } else {
+            var time = performance.now();
+            if (idle && time - startIdle > 3000) {
+                document.getElementById("controls").style.display = "none";
+                //console.log("none");
+            }
+        }
+
+    } else {
+        lastMouseSum = mouse.x + mouse.y;
+
+        document.getElementById("controls").style.display = "inline-block";
+        //console.log("inline-block");
+
+        idle = false;
+    }
+    //console.log(idle, lastMouseSum, sum, time, startIdle);
 }
-
-//Get cursor position
-window.addEventListener('mousemove',
-    function (event) {
-        clientPos.x = event.x;
-        clientPos.y = event.y;
-
-        //console.log(clientPos);
-    }, false);
-
-
 
 file.onchange = function () {
     var files = this.files;
@@ -178,28 +223,28 @@ function animate() {
 
     updateBackground();
 
-    
 
 
 
 
-    if(!lastOverallLoudness){
+
+    if (!lastOverallLoudness) {
         lastOverallLoudness = frequency.overall;
     }
 
     deltaLoudness = frequency.overall - lastOverallLoudness;
-    
 
-    if (frequency.overall > 101 || deltaLoudness > 38){
+
+    if (frequency.overall > 101 || deltaLoudness > 38) {
         h += 1;
         console.log("Jump");
     }
-    if(!h){
+    if (!h) {
         h = 0;
     }
-    if(h <= 360){
-        h += ((frequency.overall *2.4) / bufferLength);
-    }else{
+    if (h <= 360) {
+        h += ((frequency.overall * 2.4) / bufferLength);
+    } else {
         h = 0;
     }
 
@@ -309,18 +354,6 @@ function animate() {
 }
 
 
-var frequency = {
-    overall: 0,
-    low: 0,
-    mid: 0,
-    high: 0,
-    cursor: 0
-}
-//SETUP cursor
-var cursor = new Image();
-cursor.src = document.getElementById("cursorImg").src;
-
-
 function overallLoudess(array) {
     var sum = 0;
     var start = array.length * 0;
@@ -412,7 +445,7 @@ var backgroundFilter = {
     saturate: 0.75,
     scale: 1,
     borderOpacity: 0,
-    bottomOpacity : 0
+    bottomOpacity: 0
 }
 
 //Animate all the css elements needed
@@ -448,7 +481,7 @@ function updateBackground() {
 
     //document.getElementById("brightnessFilterLeft").style.background = "radial-gradient(ellipse at 35%, hsl(" + 231 + "," + 100 + "%," + 98 + "%) 1%, transparent 70%, transparent)"; //"hsl(" + h + "," + s + "%," + l + "%)"
     //document.getElementById("brightnessFilterRight").style.background = "radial-gradient(ellipse at 65%, hsl(" + 231 + "," + 100 + "%," + 98 + "%) 1%, transparent 70%, transparent)"; //"radial-gradient(ellipse at 65%, hsl(" + h + "," + 55 + "%," + 60 + "%) 1%, transparent 70%, transparent)";
-    
+
     document.getElementById("newBrightnessFilter").style.filter = "brightness(" + backgroundFilter.brightness + ")";
 
     document.getElementById("saturateFilter").style.filter = "saturate(" + backgroundFilter.saturate + ")";
@@ -464,36 +497,7 @@ function updateBackground() {
 
 }
 
-//idle detect to hide controls
-var lastMouseSum;
-var startIdle;
-var idle;
-function mouseIdle(mouse) {
-    if (!lastMouseSum) {
-        lastMouseSum = mouse.x + mouse.y;
-    }
-    var sum = mouse.x + mouse.y;
-    if (sum == lastMouseSum) {
-        if (!idle) {
-            startIdle = performance.now();
-            idle = true;
-        } else {
-            var time = performance.now();
-            if (idle && time - startIdle > 3000) {
-                document.getElementById("controls").style.display = "none";
-                //console.log("none");
-            }
-        }
 
-    } else {
-        lastMouseSum = mouse.x + mouse.y;
 
-        document.getElementById("controls").style.display = "inline-block";
-        //console.log("inline-block");
-
-        idle = false;
-    }
-    //console.log(idle, lastMouseSum, sum, time, startIdle);
-}
 
 
