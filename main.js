@@ -207,7 +207,7 @@ function animate() {
     var currentTime = performance.now();
     if (currentTime - lastLog > 100) {
         //console.log(frequency);
-        console.log(deltaLoudness);
+        //console.log(deltaLoudness);
 
         mouseIdle(clientPos);
         document.getElementById("fps").innerHTML = FPS = averageFps(lastFps);
@@ -238,6 +238,7 @@ function animate() {
     if (frequency.overall > 101 || deltaLoudness > 38) {
         h += 1;
         console.log("Jump");
+        addParticules(1);
     }
     if (!h) {
         h = 0;
@@ -249,6 +250,15 @@ function animate() {
     }
 
 
+    for (i = 0; i < particules.length; i++) {
+        particules[i].alpha = i / particules.length;
+        particules[i].run();
+    }
+
+
+    if (particules.length > 650) {
+        particules.shift();
+    }
 
     for (var i = 0; i < dataArray.length; i++) { //dataArray.length
         barHeight = dataArray[i];
