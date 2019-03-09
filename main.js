@@ -256,7 +256,7 @@ function animate() {
     }
 
 
-    if (particules.length > 650) {
+    if (particules.length > 500) {
         particules.shift();
     }
 
