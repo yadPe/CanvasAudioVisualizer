@@ -8,6 +8,7 @@ class Particule {
         this.dx = dx;
         this.dy = dy;
         this.radius = size;
+        this.ogSpeed = speed;
         this.speed = speed;
         this.alpha = alpha;
     }
@@ -46,4 +47,8 @@ function addParticules(n) {
 
 function randomNum(min, max) {
     return Math.random() * (max - min) + min;
+}
+
+function convertRange(OldValue, OldMax, OldMin, NewMax, NewMin){
+    return (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
 }

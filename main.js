@@ -9,6 +9,7 @@ var file = document.getElementById("thefile");
 canvas = document.getElementById('visualizer');
 ctx = canvas.getContext("2d");
 
+var effect;
 
 var frequency = {
     overall: 0,
@@ -135,7 +136,7 @@ file.onchange = function () {
 
     //console.log(dataArray);
 
-    barWidth = (canvas.width / bufferLength) * 2.5;
+    barWidth = (canvas.width / bufferLength) ;
     //barWidth = 50
 
     document.getElementById("epicVicRoy").style.cursor = "none";
@@ -209,6 +210,7 @@ function animate() {
         //console.log(frequency);
         //console.log(deltaLoudness);
 
+        console.log(effect);
         mouseIdle(clientPos);
         document.getElementById("fps").innerHTML = FPS = averageFps(lastFps);
 
@@ -252,6 +254,7 @@ function animate() {
 
     for (i = 0; i < particules.length; i++) {
         particules[i].alpha = i / particules.length;
+        particules[i].speed = particules[i].ogSpeed * convertRange(frequency.high, 255, 0, 4, 0.1);
         particules[i].run();
     }
 
@@ -290,7 +293,7 @@ function animate() {
             //ratio *= epicRange;
 
             //idk what ive done here but it works guys
-            if (Math.abs(clientPos.x - x) <= 150) {
+            if (Math.abs(clientPos.x - x) <= 200) {
                 var value = -Math.abs(clientPos.x - x);
                 //console.log(value);
                 if (value == 0) {
@@ -305,19 +308,21 @@ function animate() {
                         epiic = 1;
                     }
                     //ratio *= epiic;
-                    var masterRoyal = (epiic * (deltaY / (canvas.width / 2)) + 0.5);
+                    var masterRoyal = (epiic * (deltaY / (canvas.height)) + 0.4);
                     if (masterRoyal < 1) {
-                        ratio *= 1;
+                        //ratio *= 1;
                     }
                     else {
                         ratio *= masterRoyal;
                     }
 
                 }
+                effect = i + " x" + ratio;
             }
 
             ctx.fillStyle = "hsl(" + h + "," + s + "%," + l + "%)"; //hsv(360°, 73%, 96%)   "rgb(" + r + "," + g + "," + b + ")"
             ctx.fillRect(x, canvas.height - (barHeight * ratio), barWidth, barHeight * ratio);
+            
         }
         else {
             ratio = 1;
