@@ -2,7 +2,7 @@
 
 **Do not use if you have Photosensitive epilepsy**
 
-### See live on **[Codepen](https://codepen.io/heinhein/full/LqdEyP)** 
+### See live **[here](https://yadpe.github.io/CanvasAudioVisualizer/)** 
 
 Dedicated gpu recommended for best experience.
 
