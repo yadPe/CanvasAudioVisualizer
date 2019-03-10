@@ -9,6 +9,7 @@ var file = document.getElementById("thefile");
 canvas = document.getElementById('visualizer');
 ctx = canvas.getContext("2d");
 
+var effect;
 
 var frequency = {
     overall: 0,
@@ -113,12 +114,17 @@ function mouseIdle(mouse) {
     //console.log(idle, lastMouseSum, sum, time, startIdle);
 }
 
+
+var video = document.getElementById('video');
 file.onchange = function () {
     var files = this.files;
     audio.src = URL.createObjectURL(files[0]);
     audio.load();
     audio.play();
 
+    video.src = URL.createObjectURL(files[0]);
+    video.load();
+    video.play();
     audioCtx = new AudioContext();
     src = audioCtx.createMediaElementSource(audio);
     analyser = audioCtx.createAnalyser();
@@ -135,7 +141,7 @@ file.onchange = function () {
 
     //console.log(dataArray);
 
-    barWidth = (canvas.width / bufferLength) * 2.5;
+    barWidth = (canvas.width / bufferLength);
     //barWidth = 50
 
     document.getElementById("epicVicRoy").style.cursor = "none";
@@ -176,6 +182,7 @@ var deltaLoudness;
 
 function animate() {
 
+    // State and fps counter //
     if (!lastRun) {
         lastRun = performance.now();
         requestAnimFrame(animate);
@@ -198,7 +205,8 @@ function animate() {
 
 
 
-    analyser.getByteFrequencyData(dataArray);
+
+    // Run every 0.1s - logs and idle handeling //
     if (!lastLog) {
         //console.log(frequency);
 
@@ -207,8 +215,9 @@ function animate() {
     var currentTime = performance.now();
     if (currentTime - lastLog > 100) {
         //console.log(frequency);
-        console.log(deltaLoudness);
+        //console.log(deltaLoudness);
 
+        console.log(effect);
         mouseIdle(clientPos);
         document.getElementById("fps").innerHTML = FPS = averageFps(lastFps);
 
@@ -219,14 +228,13 @@ function animate() {
     }
 
 
+
+    // analyse frequency and make average by range  //
+    analyser.getByteFrequencyData(dataArray);
     overallLoudess(dataArray);
-
+    // Animate css elements
     updateBackground();
-
-
-
-
-
+    
 
     if (!lastOverallLoudness) {
         lastOverallLoudness = frequency.overall;
@@ -238,6 +246,7 @@ function animate() {
     if (frequency.overall > 101 || deltaLoudness > 38) {
         h += 1;
         console.log("Jump");
+        addParticules(1);
     }
     if (!h) {
         h = 0;
@@ -249,6 +258,16 @@ function animate() {
     }
 
 
+    for (i = 0; i < particules.length; i++) {
+        particules[i].alpha = i / particules.length;
+        particules[i].speed = particules[i].ogSpeed * convertRange(frequency.high, 255, 0, 4.5, 0.15);
+        particules[i].run();
+    }
+
+
+    if (particules.length > 500) {
+        particules.shift();
+    }
 
     for (var i = 0; i < dataArray.length; i++) { //dataArray.length
         barHeight = dataArray[i];
@@ -280,7 +299,7 @@ function animate() {
             //ratio *= epicRange;
 
             //idk what ive done here but it works guys
-            if (Math.abs(clientPos.x - x) <= 150) {
+            if (Math.abs(clientPos.x - x) <= 200) {
                 var value = -Math.abs(clientPos.x - x);
                 //console.log(value);
                 if (value == 0) {
@@ -295,19 +314,21 @@ function animate() {
                         epiic = 1;
                     }
                     //ratio *= epiic;
-                    var masterRoyal = (epiic * (deltaY / (canvas.width / 2)) + 0.5);
+                    var masterRoyal = (epiic * (deltaY / (canvas.height)) + 0.4);
                     if (masterRoyal < 1) {
-                        ratio *= 1;
+                        //ratio *= 1;
                     }
                     else {
                         ratio *= masterRoyal;
                     }
 
                 }
+                effect = i + " x" + ratio;
             }
 
             ctx.fillStyle = "hsl(" + h + "," + s + "%," + l + "%)"; //hsv(360°, 73%, 96%)   "rgb(" + r + "," + g + "," + b + ")"
             ctx.fillRect(x, canvas.height - (barHeight * ratio), barWidth, barHeight * ratio);
+
         }
         else {
             ratio = 1;
@@ -455,7 +476,7 @@ function updateBackground() {
 
     backgroundFilter.brightness = 0.3 + ((frequency.high / 100) * 1.1);
 
-    backgroundFilter.borderOpacity = 0 + ((frequency.high / 100) * 1);
+    backgroundFilter.borderOpacity = 0 + ((frequency.high / 100) * 0.35);
 
     backgroundFilter.bottomOpacity = 0 + ((frequency.overall / 100) * 1);
 
