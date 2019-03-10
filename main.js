@@ -114,12 +114,17 @@ function mouseIdle(mouse) {
     //console.log(idle, lastMouseSum, sum, time, startIdle);
 }
 
+
+var video = document.getElementById('video');
 file.onchange = function () {
     var files = this.files;
     audio.src = URL.createObjectURL(files[0]);
     audio.load();
     audio.play();
 
+    video.src = URL.createObjectURL(files[0]);
+    video.load();
+    video.play();
     audioCtx = new AudioContext();
     src = audioCtx.createMediaElementSource(audio);
     analyser = audioCtx.createAnalyser();
@@ -136,7 +141,7 @@ file.onchange = function () {
 
     //console.log(dataArray);
 
-    barWidth = (canvas.width / bufferLength) ;
+    barWidth = (canvas.width / bufferLength);
     //barWidth = 50
 
     document.getElementById("epicVicRoy").style.cursor = "none";
@@ -177,6 +182,7 @@ var deltaLoudness;
 
 function animate() {
 
+    // State and fps counter //
     if (!lastRun) {
         lastRun = performance.now();
         requestAnimFrame(animate);
@@ -199,7 +205,8 @@ function animate() {
 
 
 
-    analyser.getByteFrequencyData(dataArray);
+
+    // Run every 0.1s - logs and idle handeling //
     if (!lastLog) {
         //console.log(frequency);
 
@@ -221,14 +228,13 @@ function animate() {
     }
 
 
+
+    // analyse frequency and make average by range  //
+    analyser.getByteFrequencyData(dataArray);
     overallLoudess(dataArray);
-
+    // Animate css elements
     updateBackground();
-
-
-
-
-
+    
 
     if (!lastOverallLoudness) {
         lastOverallLoudness = frequency.overall;
@@ -254,7 +260,7 @@ function animate() {
 
     for (i = 0; i < particules.length; i++) {
         particules[i].alpha = i / particules.length;
-        particules[i].speed = particules[i].ogSpeed * convertRange(frequency.high, 255, 0, 4, 0.1);
+        particules[i].speed = particules[i].ogSpeed * convertRange(frequency.overall, 255, 0, 4, 0.2);
         particules[i].run();
     }
 
@@ -322,7 +328,7 @@ function animate() {
 
             ctx.fillStyle = "hsl(" + h + "," + s + "%," + l + "%)"; //hsv(360°, 73%, 96%)   "rgb(" + r + "," + g + "," + b + ")"
             ctx.fillRect(x, canvas.height - (barHeight * ratio), barWidth, barHeight * ratio);
-            
+
         }
         else {
             ratio = 1;
