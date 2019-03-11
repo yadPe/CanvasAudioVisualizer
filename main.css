@@ -83,3 +83,26 @@ img{
     left: 0px;
     width: 100%;
 }
+
+#panel{
+    position: fixed;
+    top: 5%;
+    right: -350px;
+    height: 9%;
+    width: 400px;
+    border-left: 5px solid blueviolet;
+    background-color: rgba(0, 0, 0, 0.8);
+    transition-delay: 2s;
+    transition-property: all;
+    transition-duration: 1s;
+}
+
+#panel:hover{
+    right: 0px;
+    transition: all 800ms;
+}
+audio{
+    margin: 15px;
+    width: 300px;
+    background: rgba(0, 0, 0, 0)
+}

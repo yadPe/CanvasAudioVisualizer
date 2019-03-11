@@ -260,7 +260,7 @@ function animate() {
 
     for (i = 0; i < particules.length; i++) {
         particules[i].alpha = i / particules.length;
-        particules[i].speed = particules[i].ogSpeed * convertRange(frequency.high, 255, 0, 4.5, 0.15);
+        particules[i].speed = particules[i].ogSpeed * convertRange(frequency.high, 255, 0, 5.5, 0.15);
         particules[i].run();
     }
 
